@@ -83,10 +83,6 @@ Install the following dependencies:
 
 ---
 
-## Cloud Architecture
-
-![4371746619663_.pic.jpg](https://s2.loli.net/2025/05/07/MExYu1Wy8pn9lOw.png)
-
 ## License
 
 This project is open-source and available under the MIT License.
