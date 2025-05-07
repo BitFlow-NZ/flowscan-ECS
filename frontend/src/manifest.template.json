@@ -1,0 +1,22 @@
+{
+    "name": "Bitflow",
+    "short_name": "Bitflowo",
+    "display": "standalone",
+    "start_url": "./?utm_source=homescreen",
+    "theme_color": "#002140",
+    "background_color": "#001529",
+    "icons": [
+      {
+        "src": "%REACT_APP_IMG_URL%/image/bitflow+icon.png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "%REACT_APP_IMG_URL%/image/bitflow+icon.png",
+        "sizes": "128x128"
+      },
+      {
+        "src": "%REACT_APP_IMG_URL%/image/bitflow+icon.png",
+        "sizes": "512x512"
+      }
+    ]
+  }

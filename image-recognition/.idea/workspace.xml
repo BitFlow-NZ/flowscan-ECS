@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="acd2ea22-7571-4d15-8579-bf4f1a8d94ab" name="Changes" comment="update fuzzy match function">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Image_Reco.py" beforeDir="false" afterPath="$PROJECT_DIR$/Image_Reco.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/swagger.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/static/swagger.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2pMgFHMO8YToQCTjh6CHS6BllQ3" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="sortByType" value="true" />
+    <option name="sortKey" value="BY_TYPE" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;Flask server.Flask (app.py).executor&quot;: &quot;Run&quot;,
+    &quot;Python.Image_Reco (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python.Image_Reco.executor&quot;: &quot;Run&quot;,
+    &quot;Python.OCR.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/sxysean/PycharmProjects/image-recognition&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/static" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Flask server.image-recognition">
+    <configuration name="Image_Reco (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="image-recognition" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Image_Reco.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Image_Reco" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="image-recognition" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/../Image_Recognition_Test" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../Image_Recognition_Test/Image_Reco.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="OCR" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="image-recognition" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/OCR.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="image-recognition" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Flask (app.py)" type="Python.FlaskServer" temporary="true" nameIsGenerated="true">
+      <module name="image-recognition" />
+      <option name="target" value="$PROJECT_DIR$/app.py" />
+      <option name="targetType" value="PATH" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="image-recognition" type="Python.FlaskServer">
+      <module name="image-recognition" />
+      <option name="target" value="$PROJECT_DIR$/app.py" />
+      <option name="targetType" value="PATH" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.OCR" />
+        <item itemvalue="Flask server.Flask (app.py)" />
+        <item itemvalue="Python.Image_Reco (1)" />
+        <item itemvalue="Python.Image_Reco" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-PY-243.22562.220" />
+        <option value="bundled-python-sdk-0fc6c617c4bd-9a18a617cbe4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.22562.220" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="acd2ea22-7571-4d15-8579-bf4f1a8d94ab" name="Changes" comment="" />
+      <created>1732581252887</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732581252887</updated>
+      <workItem from="1732581254306" duration="510000" />
+      <workItem from="1732581787280" duration="200000" />
+      <workItem from="1732582035736" duration="9430000" />
+      <workItem from="1732651538125" duration="575000" />
+      <workItem from="1732653065120" duration="1041000" />
+      <workItem from="1732667181821" duration="827000" />
+      <workItem from="1732703565010" duration="122000" />
+      <workItem from="1732826825990" duration="275000" />
+      <workItem from="1732857127238" duration="532000" />
+      <workItem from="1732863940626" duration="56000" />
+      <workItem from="1732870838338" duration="41000" />
+      <workItem from="1732870985092" duration="1706000" />
+      <workItem from="1732873884618" duration="17000" />
+      <workItem from="1733358727888" duration="232000" />
+      <workItem from="1733386769013" duration="565000" />
+      <workItem from="1733469083372" duration="2283000" />
+      <workItem from="1733483777584" duration="414000" />
+      <workItem from="1733484896873" duration="35000" />
+      <workItem from="1733485434818" duration="36000" />
+      <workItem from="1733692998774" duration="26607000" />
+      <workItem from="1733791084874" duration="3530000" />
+      <workItem from="1733865969730" duration="6214000" />
+      <workItem from="1733875007733" duration="61000" />
+      <workItem from="1733889151832" duration="3261000" />
+      <workItem from="1733952585106" duration="23056000" />
+      <workItem from="1733998697353" duration="53465000" />
+      <workItem from="1734167563522" duration="289000" />
+      <workItem from="1734383355031" duration="3300000" />
+      <workItem from="1734411507386" duration="7206000" />
+      <workItem from="1734430095463" duration="6853000" />
+      <workItem from="1734471128266" duration="9839000" />
+      <workItem from="1734500676986" duration="4829000" />
+      <workItem from="1734557981085" duration="646000" />
+      <workItem from="1734561255007" duration="5000" />
+      <workItem from="1734582448801" duration="13793000" />
+      <workItem from="1735857790216" duration="1126000" />
+      <workItem from="1735871988585" duration="2205000" />
+      <workItem from="1736113768820" duration="195000" />
+      <workItem from="1736128710077" duration="264000" />
+      <workItem from="1736129086206" duration="1832000" />
+      <workItem from="1736141612151" duration="11833000" />
+      <workItem from="1736194585213" duration="11089000" />
+      <workItem from="1736800895993" duration="4000" />
+      <workItem from="1736982688210" duration="9147000" />
+      <workItem from="1737494606033" duration="4539000" />
+      <workItem from="1738101648955" duration="8094000" />
+    </task>
+    <task id="LOCAL-00001" summary="1st version">
+      <option name="closed" value="true" />
+      <created>1732581466120</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1732581466120</updated>
+    </task>
+    <task id="LOCAL-00002" summary="1st version">
+      <option name="closed" value="true" />
+      <created>1732586830045</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732586830045</updated>
+    </task>
+    <task id="LOCAL-00003" summary="GS1 barcode encode &amp; matching">
+      <option name="closed" value="true" />
+      <created>1732653390525</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1732653390526</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Fuzzy match listing top 3 items(score&gt;50)">
+      <option name="closed" value="true" />
+      <created>1732668523494</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1732668523494</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Detect gs1 data matrix and separate GTIN">
+      <option name="closed" value="true" />
+      <created>1732827072539</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1732827072539</updated>
+    </task>
+    <task id="LOCAL-00006" summary="1.Replace tesseract by textract for OCR&#10;2.Add read barcode function&#10;3.Add read text function">
+      <option name="closed" value="true" />
+      <created>1732857596286</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1732857596286</updated>
+    </task>
+    <task id="LOCAL-00007" summary="1. Call database API&#10;2. Match barcode or ocrKeyword">
+      <option name="closed" value="true" />
+      <created>1733358943943</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1733358943943</updated>
+    </task>
+    <task id="LOCAL-00008" summary="1. Create Cache for ocrKeywords&#10;2. Create flask framework in app.py">
+      <option name="closed" value="true" />
+      <created>1733387120620</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1733387120620</updated>
+    </task>
+    <task id="LOCAL-00009" summary="1. Adjust process_image function output.&#10;2. Adjust main function output, fix the bug that only output the first match item.">
+      <option name="closed" value="true" />
+      <created>1733484157711</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1733484157711</updated>
+    </task>
+    <task id="LOCAL-00010" summary="1. Create API Document using swagger&#10;2. Change Image input to url format">
+      <option name="closed" value="true" />
+      <created>1733720140331</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1733720140331</updated>
+    </task>
+    <task id="LOCAL-00011" summary="1. Update return info and code">
+      <option name="closed" value="true" />
+      <created>1733874430942</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1733874430942</updated>
+    </task>
+    <task id="LOCAL-00012" summary="1. Update cache function&#10;2. Adjust error description">
+      <option name="closed" value="true" />
+      <created>1733893078131</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1733893078131</updated>
+    </task>
+    <task id="LOCAL-00013" summary="1. Adjust swagger api">
+      <option name="closed" value="true" />
+      <created>1733969735529</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1733969735529</updated>
+    </task>
+    <task id="LOCAL-00014" summary="1. Update swagger api">
+      <option name="closed" value="true" />
+      <created>1733973007985</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1733973007985</updated>
+    </task>
+    <task id="LOCAL-00015" summary="1. Update swagger api">
+      <option name="closed" value="true" />
+      <created>1733973359951</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1733973359951</updated>
+    </task>
+    <task id="LOCAL-00016" summary="1. Update swagger api">
+      <option name="closed" value="true" />
+      <created>1733973457215</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1733973457215</updated>
+    </task>
+    <task id="LOCAL-00017" summary="1. Update cache function">
+      <option name="closed" value="true" />
+      <created>1733980600347</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1733980600347</updated>
+    </task>
+    <task id="LOCAL-00018" summary="1. Adjust fetch data format">
+      <option name="closed" value="true" />
+      <created>1734003304570</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1734003304570</updated>
+    </task>
+    <task id="LOCAL-00019" summary="1. Adjust API output message">
+      <option name="closed" value="true" />
+      <created>1734047512451</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1734047512452</updated>
+    </task>
+    <task id="LOCAL-00020" summary="1. Adjust API output message&#10;2. Match and return top 3 different items">
+      <option name="closed" value="true" />
+      <created>1734052527639</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1734052527640</updated>
+    </task>
+    <task id="LOCAL-00021" summary="1. Add host&#10;2. Add requirements.txt">
+      <option name="closed" value="true" />
+      <created>1734165838411</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1734165838411</updated>
+    </task>
+    <task id="LOCAL-00022" summary="1. Remove updating cache every 10 mins&#10;2. Create API to update cache when database change">
+      <option name="closed" value="true" />
+      <created>1734429141269</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1734429141269</updated>
+    </task>
+    <task id="LOCAL-00023" summary="1. Fix updating cache bug">
+      <option name="closed" value="true" />
+      <created>1734459498602</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1734459498602</updated>
+    </task>
+    <task id="LOCAL-00024" summary="1. Change match score required&#10;2. Fix uploading cache">
+      <option name="closed" value="true" />
+      <created>1734490469673</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1734490469673</updated>
+    </task>
+    <task id="LOCAL-00025" summary="1. Cancel barcode reco function">
+      <option name="closed" value="true" />
+      <created>1734507134776</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1734507134776</updated>
+    </task>
+    <task id="LOCAL-00026" summary="1. Fix updating cache">
+      <option name="closed" value="true" />
+      <created>1734604391288</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1734604391289</updated>
+    </task>
+    <task id="LOCAL-00027" summary="updating cache function">
+      <option name="closed" value="true" />
+      <created>1736113960319</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1736113960319</updated>
+    </task>
+    <task id="LOCAL-00028" summary="updating API_URL">
+      <option name="closed" value="true" />
+      <created>1736130910652</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1736130910652</updated>
+    </task>
+    <task id="LOCAL-00029" summary="updating fetch data function allow unitId is null">
+      <option name="closed" value="true" />
+      <created>1736155594430</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1736155594431</updated>
+    </task>
+    <task id="LOCAL-00030" summary="change to production mode: debug=False">
+      <option name="closed" value="true" />
+      <created>1736198299856</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1736198299856</updated>
+    </task>
+    <task id="LOCAL-00031" summary="change output unitId to int">
+      <option name="closed" value="true" />
+      <created>1736208990210</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1736208990210</updated>
+    </task>
+    <task id="LOCAL-00032" summary="update fuzzy match function">
+      <option name="closed" value="true" />
+      <created>1737062568551</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1737062568551</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="main" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1.Replace tesseract by textract for OCR&#10;2.Add read barcode function&#10;3.Add read text function" />
+    <MESSAGE value="1. Call database API&#10;2. Match barcode or ocrKeyword" />
+    <MESSAGE value="1. Create Cache for ocrKeywords&#10;2. Create flask framework in app.py" />
+    <MESSAGE value="1. Adjust process_image function output.&#10;2. Adjust main function output, fix the bug that only output the first match item." />
+    <MESSAGE value="1. Create API Document using swagger&#10;2. Change Image input to url format" />
+    <MESSAGE value="1. Update return info and code" />
+    <MESSAGE value="1. Update cache function&#10;2. Adjust error description" />
+    <MESSAGE value="1. Adjust swagger api" />
+    <MESSAGE value="1. Update swagger api" />
+    <MESSAGE value="1. Update cache function" />
+    <MESSAGE value="1. Adjust fetch data format" />
+    <MESSAGE value="1. Adjust API output message" />
+    <MESSAGE value="1. Adjust API output message&#10;2. Match and return top 3 different items" />
+    <MESSAGE value="1. Add host&#10;2. Add requirements.txt" />
+    <MESSAGE value="1. Remove updating cache every 10 mins&#10;2. Create API to update cache when database change" />
+    <MESSAGE value="1. Fix updating cache bug" />
+    <MESSAGE value="1. Change match score required&#10;2. Fix uploading cache" />
+    <MESSAGE value="1. Cancel barcode reco function" />
+    <MESSAGE value="1. Fix updating cache" />
+    <MESSAGE value="updating cache function" />
+    <MESSAGE value="updating API_URL" />
+    <MESSAGE value="updating fetch data function allow unitId is null" />
+    <MESSAGE value="change to production mode: debug=False" />
+    <MESSAGE value="change output unitId to int" />
+    <MESSAGE value="update fuzzy match function" />
+    <option name="LAST_COMMIT_MESSAGE" value="update fuzzy match function" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/image_recognition$main.coverage" NAME="main Coverage Results" MODIFIED="1732582248251" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/image_recognition$Image_Reco.coverage" NAME="Image_Reco Coverage Results" MODIFIED="1732586351446" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../Image_Recognition_Test" />
+    <SUITE FILE_PATH="coverage/image_recognition$OCR.coverage" NAME="OCR Coverage Results" MODIFIED="1736988298682" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/image_recognition$Image_Reco__1_.coverage" NAME="Image_Reco (1) Coverage Results" MODIFIED="1734043129154" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/image_recognition$Flask__app_py_.coverage" NAME="Flask (app.py) Coverage Results" MODIFIED="1734383912230" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+  </component>
+</project>

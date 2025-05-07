@@ -1,0 +1,51 @@
+{
+  "family": "flowscan-backend",
+  "executionRoleArn": "arn:aws:iam::122610479918:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::122610479918:role/flowscan-backend-role",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "containerDefinitions": [
+    {
+      "name": "csharp-backend",
+      "image": "122610479918.dkr.ecr.ap-southeast-2.amazonaws.com/flowscan/csharp-backend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5001,
+          "hostPort": 5001,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "ASPNETCORE_ENVIRONMENT", "value": "Production" },
+        { "name": "ASPNETCORE_URLS", "value": "http://+:5001" }
+      ],
+      "secrets": [
+        {
+          "name": "ConnectionStrings__DefaultConnection",
+          "valueFrom": "arn:aws:ssm:ap-southeast-2:122610479918:parameter/flowscan/DB_CONNECTION_STRING"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/flowscan-backend",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:5001/health || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "family": "flowscan-frontend",
+  "executionRoleArn": "arn:aws:iam::122610479918:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::122610479918:role/flowscan-frontend-role",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "122610479918.dkr.ecr.ap-southeast-2.amazonaws.com/flowscan/frontend:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        { "name": "REACT_APP_ENV", "value": "prod" },
+        { "name": "REACT_APP_AWS_BUCKET_NAME", "value": "flowscan-web" },
+        { "name": "REACT_APP_AWS_REGION", "value": "ap-southeast-2" },
+        { "name": "REACT_APP_API_URL", "value": "https://inflowcan.net/api" },
+        {
+          "name": "REACT_APP_IMG_URL",
+          "value": "https://bitflow-website.s3.ap-southeast-2.amazonaws.com"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "REACT_APP_AWS_ACCESS_KEY_ID",
+          "valueFrom": "arn:aws:ssm:ap-southeast-2:122610479918:parameter/flowscan/REACT_APP_AWS_ACCESS_KEY_ID"
+        },
+        {
+          "name": "REACT_APP_AWS_SECRET_ACCESS_KEY",
+          "valueFrom": "arn:aws:ssm:ap-southeast-2:122610479918:parameter/flowscan/REACT_APP_AWS_SECRET_ACCESS_KEY"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/flowscan-frontend",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}

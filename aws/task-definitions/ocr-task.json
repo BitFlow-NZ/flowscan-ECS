@@ -1,0 +1,74 @@
+{
+  "family": "flowscan-ocr",
+  "executionRoleArn": "arn:aws:iam::122610479918:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::122610479918:role/flowscan-ocr-role",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "containerDefinitions": [
+    {
+      "name": "image-recognition",
+      "image": "122610479918.dkr.ecr.ap-southeast-2.amazonaws.com/flowscan/image-recognition:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 5001,
+          "hostPort": 5001,
+          "protocol": "tcp"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "VISION_KEY",
+          "valueFrom": "arn:aws:ssm:ap-southeast-2:122610479918:parameter/flowscan/VISION_KEY"
+        },
+        {
+          "name": "VISION_ENDPOINT",
+          "valueFrom": "arn:aws:ssm:ap-southeast-2:122610479918:parameter/flowscan/VISION_ENDPOINT"
+        }
+      ],
+      "environment": [
+        {
+          "name": "API_URL",
+          "value": "http://flowscan-backend-service:5001/api/OCRItem"
+        }
+      ],
+      "mountPoints": [
+        {
+          "sourceVolume": "cache-data",
+          "containerPath": "/app/cache",
+          "readOnly": false
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/flowscan-ocr",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:5001/swagger || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ],
+  "volumes": [
+    {
+      "name": "cache-data",
+      "efsVolumeConfiguration": {
+        "fileSystemId": "fs-0ebb79f92e3de6500",
+        "rootDirectory": "/",
+        "transitEncryption": "ENABLED"
+      }
+    }
+  ]
+}

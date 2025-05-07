@@ -1,0 +1,372 @@
+openapi: 3.0.1
+info:
+  title: Image Recognition API
+  description: API for barcode and text recognition
+  version: 1.0.0
+
+paths:
+  /process-image:
+    post:
+      summary: Process an image for text recognition
+      description: Extracts text from the provided image URL and matches it with cached pharmacy items.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - image_url
+              properties:
+                image_url:
+                  type: string
+                  description: The URL of the image to process.
+                  example: https://example.com/image.jpg
+      responses:
+        '200':
+          description: Success or expected failure in matching
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Matched items returned
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            item_id:
+                              type: integer
+                            unit_id:
+                              type: integer
+                        example: [{"item_id": 1, "unit_id": 1}, {"item_id": 2, "unit_id": 1}]
+                      message:
+                        type: string
+                        example: "Match successfully"
+                  - type: object
+                    description: No text detected
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      data:
+                        type: "null"
+                        nullable: true
+                        example: null
+                      message:
+                        type: string
+                        example: "No text detected"
+                  - type: object
+                    description: No matched item
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      data:
+                        type: "null"
+                        nullable: true
+                        example: null
+                      message:
+                        type: string
+                        example: "No matched item"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: "null"
+                    nullable: true
+                    example: null
+                  message:
+                    type: string
+                    example: "Invalid JSON body"
+        '415':
+          description: Unsupported Media Type
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: "null"
+                    nullable: true
+                    example: null
+                  message:
+                    type: string
+                    example: "Unsupported Media Type. Expected 'application/json'"
+        '500':
+          description: Internal Server Error (e.g., cache missing or unexpected exception)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: "null"
+                    nullable: true
+                    example: null
+                  message:
+                    type: string
+                    example: "Cache is empty or not updated."
+
+  /decode-barcode:
+    post:
+      summary: Decode barcode from an image
+      description: Detects and decodes a GS1 barcode from the provided image URL.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_url:
+                  type: string
+                  description: The URL of the image containing the barcode.
+                  example: https://example.com/image.jpg
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "string"
+                oneOf:
+                  - description: Successful response with detected barcode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: string
+                        description: Decoded barcode.
+                        example: "12345678901234"
+                  - description: Successful response with no detected barcode
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      data:
+                        type: string
+                        example: null
+                      message:
+                        type: string
+                        example: "No barcode detected"
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "Image URL is required"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "An unexpected error occurred: <error details>"
+
+  /extract-text:
+    post:
+      summary: Extract text from an image
+      description: Extracts and cleans text from the provided image URL.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                image_url:
+                  type: string
+                  description: The URL of the image to extract text from.
+                  example: https://example.com/image.jpg
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "String"
+                oneOf:
+                  - description: Successful response with detected barcode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      data:
+                        type: string
+                        description: Text extracted
+                        example: "Text extracted from image"
+                  - description: Successful response with no detected barcode
+                    properties:
+                      success:
+                        type: boolean
+                        example: false
+                      data:
+                        type: string
+                        example: null
+                      message:
+                        type: string
+                        example: "No text extracted from image"
+
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "Image URL is required"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "An unexpected error occurred: <error details>"
+
+  /update-cache:
+    post:
+      summary: Update OCR cache
+      description: Update the cache used for OCR matching.
+      responses:
+        '200':
+          description: Cache updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "Cache updated successfully"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "An unexpected error occurred: <error details>"
+
+  /clear-cache:
+    post:
+      summary: Clear OCR cache
+      description: Clears the cache used for OCR matching.
+      responses:
+        '200':
+          description: Cache cleared successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "Cache cleared successfully"
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  data:
+                    type: string
+                    example: null
+                  message:
+                    type: string
+                    example: "An unexpected error occurred: <error details>"
+

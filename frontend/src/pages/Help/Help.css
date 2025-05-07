@@ -1,0 +1,10 @@
+/* UserManual.css */
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+#introduction, #getting-started, #features-and-usage, #quick-scan, 
+#create-new-event, #view-edit-events, #add-new-item, #manage-current-item,#item-list,#event-list{
+  margin-top: 50px; 
+}

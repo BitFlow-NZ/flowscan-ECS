@@ -1,0 +1,173 @@
+[
+  {
+    "id": 1,
+    "name": "Eyedrops",
+    "img": "./eyedrops.jpg",
+    "description": "A bottle of soothing eyedrops.Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": 2,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Hand Sanitizer",
+    "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg",
+    "description": "Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": 1,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Hand Sanitizer",
+    "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg",
+    "description": "Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": null,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Eyedrops",
+    "img": "./eyedrops.jpg",
+    "description": "A bottle of soothing eyedrops.Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": 2,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Hand Sanitizer",
+    "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg",
+    "description": "Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": 1,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Hand Sanitizer",
+    "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg",
+    "description": "Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": null,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Eyedrops",
+    "img": "./eyedrops.jpg",
+    "description": "A bottle of soothing eyedrops.Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": 2,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Hand Sanitizer",
+    "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg",
+    "description": "Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": 1,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Hand Sanitizer",
+    "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg",
+    "description": "Kills 99.9% of germs with aloe vera.",
+    "defaultUnitId": null,
+    "units": [
+      {
+        "id": 1,
+        "name": "pack",
+        "img": "./eyedrops.jpg"
+      },
+      {
+        "id": 2,
+        "name": "box",
+        "img": "https://www.eyecaresolutions.co.nz/wp-content/uploads/2015/04/Poly-Tears.jpg"
+      }
+    ]
+  }
+]
