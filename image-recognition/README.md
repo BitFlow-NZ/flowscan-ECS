@@ -1,11 +1,15 @@
 # Image Recognition Project
 
+Flowscan project deployed on AWS ECS, RDS, established CI/CD using github actions
+
 ## Overview
+
 This project provides an Image Recognition API built using Flask. The API can process images for barcode detection, text extraction, and fuzzy matching against a list of products fetched from an external API. Additionally, the application supports Swagger documentation for easy testing and exploration of its endpoints.
 
 ---
 
 ## Features
+
 1. **Barcode Detection:**
    - Decodes GS1 barcodes from image URLs and extracts GTIN.
 2. **Text Extraction:**
@@ -22,6 +26,7 @@ This project provides an Image Recognition API built using Flask. The API can pr
 ---
 
 ## Prerequisites
+
 1. **Python 3.8 or above**
 2. **AWS Credentials:** Required for Textract integration.
 3. **Dependencies:** Install dependencies(see below).
@@ -31,12 +36,14 @@ This project provides an Image Recognition API built using Flask. The API can pr
 ## Installation
 
 1. **Clone the Repository:**
+
    ```bash
    git clone <repository_url>
    cd <repository_folder>
    ```
 
 2. **Install Dependencies:**
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -52,6 +59,7 @@ This project provides an Image Recognition API built using Flask. The API can pr
 ---
 
 ## File Structure
+
 - `app.py`: Main Flask application.
 - `Image_Reco.py`: Contains core image processing and matching logic.
 - `static/swagger.yaml`: Swagger configuration file.
@@ -62,6 +70,7 @@ This project provides an Image Recognition API built using Flask. The API can pr
 ## Dependencies
 
 Install the following dependencies:
+
 - Flask
 - flask-swagger-ui
 - cachetools
@@ -74,6 +83,10 @@ Install the following dependencies:
 
 ---
 
-## License
-This project is open-source and available under the MIT License.
+## Cloud Architecture
 
+![4371746619663_.pic.jpg](https://s2.loli.net/2025/05/07/MExYu1Wy8pn9lOw.png)
+
+## License
+
+This project is open-source and available under the MIT License.
