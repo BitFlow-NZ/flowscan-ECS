@@ -2,8 +2,8 @@ name: Deploy to Amazon ECS
 
 on:
   push:
-    branches: [ "main" ]
-  workflow_dispatch:  # Allows manual triggering
+    branches: ["main"]
+  workflow_dispatch: # Allows manual triggering
 
 permissions:
   contents: read
@@ -23,127 +23,127 @@ jobs:
     environment: production
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
-    - name: Login to Amazon ECR
-      id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-    - name: Set ECR Repository URI variables
-      run: |
-        echo "ECR_FRONTEND_REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_PREFIX }}/frontend" >> $GITHUB_ENV
-        echo "ECR_BACKEND_REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_PREFIX }}/csharp-backend" >> $GITHUB_ENV
-        echo "ECR_OCR_REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_PREFIX }}/image-recognition" >> $GITHUB_ENV
-        echo "IMAGE_TAG=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+      - name: Set ECR Repository URI variables
+        run: |
+          echo "ECR_FRONTEND_REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_PREFIX }}/frontend" >> $GITHUB_ENV
+          echo "ECR_BACKEND_REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_PREFIX }}/csharp-backend" >> $GITHUB_ENV
+          echo "ECR_OCR_REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_PREFIX }}/image-recognition" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
 
-    # Build and push Frontend Docker image
-    - name: Build and push Frontend image
-      id: build-frontend
-      uses: docker/build-push-action@v4
-      with:
-        context: ./frontend
-        push: true
-        tags: ${{ env.ECR_FRONTEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_FRONTEND_REPOSITORY_URI }}:latest
-        build-args: |
-          REACT_APP_ENV=production
-          REACT_APP_API_URL=/api
-          REACT_APP_AWS_BUCKET_NAME=${{ secrets.REACT_APP_AWS_BUCKET_NAME }}
-          REACT_APP_AWS_REGION=${{ env.AWS_REGION }}
-          REACT_APP_IMG_URL=${{ secrets.REACT_APP_IMG_URL }}
+      # Build and push Frontend Docker image
+      - name: Build and push Frontend image
+        id: build-frontend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          push: true
+          tags: ${{ env.ECR_FRONTEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_FRONTEND_REPOSITORY_URI }}:latest
+          build-args: |
+            REACT_APP_ENV=production
+            REACT_APP_API_URL=/api
+            REACT_APP_AWS_BUCKET_NAME=${{ secrets.REACT_APP_AWS_BUCKET_NAME }}
+            REACT_APP_AWS_REGION=${{ env.AWS_REGION }}
+            REACT_APP_IMG_URL=${{ secrets.REACT_APP_IMG_URL }}
 
-    # Build and push Backend Docker image
-    - name: Build and push Backend image
-      id: build-backend
-      uses: docker/build-push-action@v4
-      with:
-        context: ./API
-        push: true
-        tags: ${{ env.ECR_BACKEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_BACKEND_REPOSITORY_URI }}:latest
+      # Build and push Backend Docker image
+      - name: Build and push Backend image
+        id: build-backend
+        uses: docker/build-push-action@v4
+        with:
+          context: ./API
+          push: true
+          tags: ${{ env.ECR_BACKEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_BACKEND_REPOSITORY_URI }}:latest
 
-    # Build and push OCR Docker image
-    - name: Build and push OCR image
-      id: build-ocr
-      uses: docker/build-push-action@v4
-      with:
-        context: ./image-recognition
-        push: true
-        tags: ${{ env.ECR_OCR_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_OCR_REPOSITORY_URI }}:latest
+      # Build and push OCR Docker image
+      - name: Build and push OCR image
+        id: build-ocr
+        uses: docker/build-push-action@v4
+        with:
+          context: ./image-recognition
+          push: true
+          tags: ${{ env.ECR_OCR_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_OCR_REPOSITORY_URI }}:latest
 
-    # Download task definition files from ECS
-    - name: Download task definitions
-      run: |
-        aws ecs describe-task-definition --task-definition flowscan-frontend --query taskDefinition > /aws/task-definitions/frontend-task.json
-        aws ecs describe-task-definition --task-definition flowscan-backend --query taskDefinition > /aws/task-definitions/backend-task.json
-        aws ecs describe-task-definition --task-definition flowscan-ocr --query taskDefinition > /aws/task-definitions/ocr-task.json
+      # Download task definition files from ECS
+      - name: Download task definitions
+        run: |
+          aws ecs describe-task-definition --task-definition flowscan-frontend --query taskDefinition > frontend-task-def.json
+          aws ecs describe-task-definition --task-definition flowscan-backend --query taskDefinition > backend-task-def.json
+          aws ecs describe-task-definition --task-definition flowscan-ocr --query taskDefinition > ocr-task-def.json
 
-    # Update Frontend task definition
-    - name: Update Frontend task definition
-      id: update-frontend-task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: frontend-task.json
-        container-name: frontend
-        image: ${{ env.ECR_FRONTEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
+      # Update Frontend task definition
+      - name: Update Frontend task definition
+        id: update-frontend-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: frontend-task.json
+          container-name: frontend
+          image: ${{ env.ECR_FRONTEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
 
-    # Update Backend task definition
-    - name: Update Backend task definition
-      id: update-backend-task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: backend-task.json
-        container-name: csharp-backend
-        image: ${{ env.ECR_BACKEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
+      # Update Backend task definition
+      - name: Update Backend task definition
+        id: update-backend-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: backend-task.json
+          container-name: csharp-backend
+          image: ${{ env.ECR_BACKEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
 
-    # Update OCR task definition
-    - name: Update OCR task definition
-      id: update-ocr-task-def
-      uses: aws-actions/amazon-ecs-render-task-definition@v1
-      with:
-        task-definition: ocr-task.json
-        container-name: image-recognition
-        image: ${{ env.ECR_OCR_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
+      # Update OCR task definition
+      - name: Update OCR task definition
+        id: update-ocr-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ocr-task.json
+          container-name: image-recognition
+          image: ${{ env.ECR_OCR_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
 
-    # Deploy Frontend ECS Service
-    - name: Deploy Frontend to Amazon ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.update-frontend-task-def.outputs.task-definition }}
-        service: ${{ env.FRONTEND_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+      # Deploy Frontend ECS Service
+      - name: Deploy Frontend to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-frontend-task-def.outputs.task-definition }}
+          service: ${{ env.FRONTEND_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
 
-    # Deploy Backend ECS Service
-    - name: Deploy Backend to Amazon ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.update-backend-task-def.outputs.task-definition }}
-        service: ${{ env.BACKEND_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+      # Deploy Backend ECS Service
+      - name: Deploy Backend to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-backend-task-def.outputs.task-definition }}
+          service: ${{ env.BACKEND_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
 
-    # Deploy OCR ECS Service
-    - name: Deploy OCR to Amazon ECS
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      with:
-        task-definition: ${{ steps.update-ocr-task-def.outputs.task-definition }}
-        service: ${{ env.OCR_SERVICE }}
-        cluster: ${{ env.ECS_CLUSTER }}
-        wait-for-service-stability: true
+      # Deploy OCR ECS Service
+      - name: Deploy OCR to Amazon ECS
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.update-ocr-task-def.outputs.task-definition }}
+          service: ${{ env.OCR_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
 
-    # Notify about deployment status
-    - name: Deployment Status Notification
-      if: always()
-      run: |
-        if [ "${{ job.status }}" = "success" ]; then
-          echo "🚀 Deployment successful! Application is now live."
-        else
-          echo "❌ Deployment failed. Check the logs for more details."
-        fi
+      # Notify about deployment status
+      - name: Deployment Status Notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "🚀 Deployment successful! Application is now live."
+          else
+            echo "❌ Deployment failed. Check the logs for more details."
+          fi
