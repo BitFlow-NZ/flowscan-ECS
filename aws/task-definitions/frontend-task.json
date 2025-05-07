@@ -22,7 +22,7 @@
         { "name": "REACT_APP_ENV", "value": "prod" },
         { "name": "REACT_APP_AWS_BUCKET_NAME", "value": "flowscan-web" },
         { "name": "REACT_APP_AWS_REGION", "value": "ap-southeast-2" },
-        { "name": "REACT_APP_API_URL", "value": "https://inflowcan.net/api" },
+        { "name": "REACT_APP_API_URL", "value": "/api" },
         {
           "name": "REACT_APP_IMG_URL",
           "value": "https://bitflow-website.s3.ap-southeast-2.amazonaws.com"
