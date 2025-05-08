@@ -31,7 +31,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/flowscan-backend",
+          "awslogs-group": "/ecs/flowscan-cluster/flowscan-backend-service/flowscan-backend",
           "awslogs-region": "ap-southeast-2",
           "awslogs-stream-prefix": "ecs"
         }
