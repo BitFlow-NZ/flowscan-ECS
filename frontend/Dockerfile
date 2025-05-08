@@ -35,8 +35,8 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Inject the env-config.js script into the index.html file
-# This will allow the script to be loaded before the React app initializes
-RUN sed -i 's/<head>/<head><script src="\/env-config.js"><\/script>/' /app/dist/index.html
+# FIX: Updated path to point to the nginx html directory
+RUN sed -i 's/<head>/<head><script src="\/env-config.js"><\/script>/' /usr/share/nginx/html/index.html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
@@ -55,9 +55,6 @@ echo "window.ENV = {\n\
 \n\
 # Start nginx\n\
 exec nginx -g "daemon off;"\n' > /docker-entrypoint.sh
-
-
-
 
 # Make entrypoint script executable
 RUN chmod +x /docker-entrypoint.sh
