@@ -34,13 +34,7 @@
           "value": "http://flowscan-backend-service:5001/api/OCRItem"
         }
       ],
-      "mountPoints": [
-        {
-          "sourceVolume": "cache-data",
-          "containerPath": "/app/cache",
-          "readOnly": false
-        }
-      ],
+
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
