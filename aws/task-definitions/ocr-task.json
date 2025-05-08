@@ -60,15 +60,5 @@
         "startPeriod": 60
       }
     }
-  ],
-  "volumes": [
-    {
-      "name": "cache-data",
-      "efsVolumeConfiguration": {
-        "fileSystemId": "fs-0ebb79f92e3de6500",
-        "rootDirectory": "/",
-        "transitEncryption": "ENABLED"
-      }
-    }
   ]
 }
