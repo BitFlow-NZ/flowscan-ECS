@@ -4,8 +4,8 @@
   "taskRoleArn": "arn:aws:iam::122610479918:role/flowscan-ocr-role",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
-  "cpu": "1024",
-  "memory": "2048",
+  "cpu": "2048",
+  "memory": "4096",
   "containerDefinitions": [
     {
       "name": "image-recognition",

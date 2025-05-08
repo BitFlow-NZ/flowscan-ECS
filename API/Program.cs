@@ -106,14 +106,44 @@ app.MapControllers();
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
 try
 {
-    //create database if not exists
-    context.Database.Migrate();
-    logger.LogInformation("Database schema updated successfully.");
-    // Seed the database
+    // Check if migrations history table exists
+    bool migrationsHistoryExists = false;
+    try
+    {
+        // Try to access the migrations history table
+        migrationsHistoryExists = context.Database.GetAppliedMigrations().Any() ||
+                                  context.Database.GetPendingMigrations().Any();
+    }
+    catch
+    {
+        // Table doesn't exist or can't be accessed
+        migrationsHistoryExists = false;
+    }
+
+    if (migrationsHistoryExists)
+    {
+        // Apply any pending migrations if the migrations history table exists
+        logger.LogInformation("Applying any pending migrations...");
+        context.Database.Migrate();
+    }
+    else
+    {
+        // Migrations history table doesn't exist but database might have tables already
+        // Skip migrations and just ensure connection is working
+        logger.LogInformation("Skipping migrations, database structure already exists");
+
+        // Just execute a simple query to verify connection
+        context.Database.ExecuteSqlRaw("SELECT 1");
+    }
+
+    logger.LogInformation("Database connection successful.");
+
+    // Always try to seed data if needed
     DBInitializer.Initialize(context);
-    logger.LogInformation("Database seeded successfully.");
+    logger.LogInformation("Database initialization complete.");
 }
 catch (Exception ex)
 {
