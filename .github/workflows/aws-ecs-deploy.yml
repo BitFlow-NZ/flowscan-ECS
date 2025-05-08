@@ -54,7 +54,7 @@ jobs:
           tags: ${{ env.ECR_FRONTEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_FRONTEND_REPOSITORY_URI }}:latest
           build-args: |
             REACT_APP_ENV=production
-            REACT_APP_API_URL=/api
+            REACT_APP_API_URL=
             REACT_APP_AWS_BUCKET_NAME=${{ secrets.REACT_APP_AWS_BUCKET_NAME }}
             REACT_APP_AWS_REGION=${{ env.AWS_REGION }}
             REACT_APP_IMG_URL=${{ secrets.REACT_APP_IMG_URL }}
