@@ -110,12 +110,14 @@ try
 {
     //create database if not exists
     context.Database.Migrate();
+    logger.LogInformation("Database schema updated successfully.");
+    // Seed the database
     DBInitializer.Initialize(context);
     logger.LogInformation("Database seeded successfully.");
 }
 catch (Exception ex)
 {
-    logger.LogError(ex, "An error occurred while seeding the database.");
+    logger.LogError(ex, "An error occurred during database initialization.");
 }
 
 app.Run();

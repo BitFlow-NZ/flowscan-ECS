@@ -1,4 +1,3 @@
-
 using API.Models.Entities;
 using Microsoft.EntityFrameworkCore; // Add this line if Item class is in the Models namespace
 
@@ -14,11 +13,9 @@ namespace API.Data
                 return;
             }
 
-
             try
             {
                 ExecuteSqlScript(context);
-
                 // Check if data was successfully loaded from script
                 if (context.Items.Any())
                 {
@@ -50,29 +47,89 @@ namespace API.Data
 
             string script = File.ReadAllText(sqlFilePath);
 
-            // Split script by GO statements if your SQL server requires it
-            var commands = script.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            // Extract only INSERT statements from the SQL script
+            var insertStatements = ExtractInsertStatements(script);
 
-            using (var transaction = context.Database.BeginTransaction())
+            using var transaction = context.Database.BeginTransaction();
+            try
             {
-                try
+                foreach (var statement in insertStatements)
                 {
-                    foreach (var command in commands)
+                    if (!string.IsNullOrWhiteSpace(statement))
                     {
-                        if (!string.IsNullOrWhiteSpace(command))
+                        context.Database.ExecuteSqlRaw(statement);
+                    }
+                }
+
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
+            }
+        }
+
+        private static List<string> ExtractInsertStatements(string script)
+        {
+            var insertStatements = new List<string>();
+            var lines = script.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            var currentStatement = new StringBuilder();
+            var insideInsert = false;
+
+            foreach (var line in lines)
+            {
+                var trimmedLine = line.Trim();
+
+                // Skip comment lines and drop/create table statements
+                if (trimmedLine.StartsWith("--") ||
+                    trimmedLine.StartsWith("/*") ||
+                    trimmedLine.StartsWith("DROP TABLE") ||
+                    trimmedLine.StartsWith("CREATE TABLE") ||
+                    trimmedLine.StartsWith("SET ") ||
+                    trimmedLine.StartsWith("ALTER "))
+                {
+                    // If we were building an insert statement, terminate it
+                    if (insideInsert)
+                    {
+                        insideInsert = false;
+                        if (currentStatement.Length > 0)
                         {
-                            context.Database.ExecuteSqlRaw(command);
+                            insertStatements.Add(currentStatement.ToString());
+                            currentStatement.Clear();
                         }
                     }
-
-                    transaction.Commit();
+                    continue;
                 }
-                catch
+
+                // Process INSERT statements
+                if (trimmedLine.StartsWith("INSERT INTO", StringComparison.OrdinalIgnoreCase))
                 {
-                    transaction.Rollback();
-                    throw;
+                    insideInsert = true;
+                    currentStatement.Clear();
+                    currentStatement.AppendLine(trimmedLine);
+                }
+                else if (insideInsert)
+                {
+                    currentStatement.AppendLine(trimmedLine);
+
+                    // Check if this line ends the insert statement
+                    if (trimmedLine.EndsWith(";"))
+                    {
+                        insertStatements.Add(currentStatement.ToString());
+                        currentStatement.Clear();
+                        insideInsert = false;
+                    }
                 }
             }
+
+            // Add any remaining statement
+            if (insideInsert && currentStatement.Length > 0)
+            {
+                insertStatements.Add(currentStatement.ToString());
+            }
+
+            return insertStatements;
         }
     }
 }
