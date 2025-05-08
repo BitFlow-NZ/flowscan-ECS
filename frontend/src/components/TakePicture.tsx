@@ -104,7 +104,9 @@ const lastScannedRef = useRef<string>('');
       );
       const fileType = compressedImage.split(';')[0].split(':')[1];
 
-      const bucketName = REACT_APP_AWS_BUCKET_NAME!;
+      const bucketName =  (window as any).ENV?.REACT_APP_AWS_BUCKET_NAME || 
+      import.meta.env.VITE_AWS_BUCKET_NAME || 
+      'flowscan-web';
 
       // S3 upload parameters
       const params = {
