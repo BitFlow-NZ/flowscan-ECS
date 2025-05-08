@@ -114,13 +114,22 @@ namespace API.Data
                 );"
             };
 
-            // Execute each command separately without transaction to avoid connection issues
+            // Execute each command in a separate context to avoid connection issues
             foreach (var command in createTableCommands)
             {
                 try
                 {
-                    // Let EF manage the connection for each command
-                    context.Database.ExecuteSqlRaw(command);
+                    // Create a new DbContext for each command execution
+                    // This ensures a fresh connection for each operation
+                    using (var freshContext = new StoreContext(
+                        new DbContextOptionsBuilder<StoreContext>()
+                            .UseMySql(
+                                context.Database.GetConnectionString(),
+                                ServerVersion.AutoDetect(context.Database.GetConnectionString()))
+                            .Options))
+                    {
+                        freshContext.Database.ExecuteSqlRaw(command);
+                    }
                 }
                 catch (Exception ex)
                 {
