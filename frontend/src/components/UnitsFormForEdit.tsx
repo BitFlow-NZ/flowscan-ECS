@@ -86,9 +86,9 @@ const UnitsFormForEdit: React.FC<UnitsFormForEditProps> = ({
   }, [isCameraOpen, webcamRef.current]);
 
   AWS.config.update({
-    accessKeyId: REACT_APP_AWS_ACCESS_KEY_ID,
-    secretAccessKey: REACT_APP_AWS_SECRET_ACCESS_KEY,
-    region: REACT_APP_AWS_REGION,
+    accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY, 
+  region: (window as any).ENV?.REACT_APP_AWS_REGION,
   });
 
   const s3 = new AWS.S3();

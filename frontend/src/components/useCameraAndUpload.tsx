@@ -4,9 +4,9 @@ import AWS from 'aws-sdk';
 import { message } from 'antd';
 
 AWS.config.update({
-  accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID!,
-  secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY!,
-  region: process.env.REACT_APP_AWS_REGION!,
+  accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
+  secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY, 
+  region: (window as any).ENV?.REACT_APP_AWS_REGION,
 });
 
 const s3 = new AWS.S3();
