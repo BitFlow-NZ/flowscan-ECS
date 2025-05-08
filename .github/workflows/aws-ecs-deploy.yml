@@ -14,7 +14,7 @@ env:
   ECS_CLUSTER: flowscan-cluster
   FRONTEND_SERVICE: flowscan-frontend-service
   BACKEND_SERVICE: flowscan-backend-service
-  OCR_SERVICE: flowscan-ocr-service
+  OCR_SERVICE: flowscan-image-recognition-service
 
 jobs:
   deploy:

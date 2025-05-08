@@ -38,7 +38,7 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "/ecs/flowscan-cluster/flowscan-ocr-service/flowscan-ocr",
+          "awslogs-group": "/ecs/flowscan-cluster/flowscan-image-recognition-service/flowscan-ocr",
           "awslogs-region": "ap-southeast-2",
           "awslogs-stream-prefix": "ecs"
         }
