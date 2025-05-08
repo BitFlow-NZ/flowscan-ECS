@@ -25,6 +25,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch all history for file change detection
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -32,6 +34,26 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
+
+      # Determine which components have changed
+      - name: Check for changes
+        id: changes
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'API/**'
+            ocr:
+              - 'image-recognition/**'
+
+      # Output detected changes
+      - name: Log detected changes
+        run: |
+          echo "Frontend changes detected: ${{ steps.changes.outputs.frontend }}"
+          echo "Backend changes detected: ${{ steps.changes.outputs.backend }}"
+          echo "OCR changes detected: ${{ steps.changes.outputs.ocr }}"
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -44,8 +66,9 @@ jobs:
           echo "ECR_OCR_REPOSITORY_URI=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY_PREFIX }}/image-recognition" >> $GITHUB_ENV
           echo "IMAGE_TAG=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
 
-      # Build and push Frontend Docker image
+      # Build and push Frontend Docker image only if frontend code changed
       - name: Build and push Frontend image
+        if: steps.changes.outputs.frontend == 'true'
         id: build-frontend
         uses: docker/build-push-action@v4
         with:
@@ -59,8 +82,9 @@ jobs:
             REACT_APP_AWS_REGION=${{ env.AWS_REGION }}
             REACT_APP_IMG_URL=${{ secrets.REACT_APP_IMG_URL }}
 
-      # Build and push Backend Docker image
+      # Build and push Backend Docker image only if backend code changed
       - name: Build and push Backend image
+        if: steps.changes.outputs.backend == 'true'
         id: build-backend
         uses: docker/build-push-action@v4
         with:
@@ -68,8 +92,9 @@ jobs:
           push: true
           tags: ${{ env.ECR_BACKEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_BACKEND_REPOSITORY_URI }}:latest
 
-      # Build and push OCR Docker image
+      # Build and push OCR Docker image only if OCR code changed
       - name: Build and push OCR image
+        if: steps.changes.outputs.ocr == 'true'
         id: build-ocr
         uses: docker/build-push-action@v4
         with:
@@ -77,15 +102,16 @@ jobs:
           push: true
           tags: ${{ env.ECR_OCR_REPOSITORY_URI }}:${{ env.IMAGE_TAG }},${{ env.ECR_OCR_REPOSITORY_URI }}:latest
 
-      # Download task definition files from ECS
+      # Download task definition files from ECS - always needed for conditional deploy steps
       - name: Download task definitions
         run: |
           aws ecs describe-task-definition --task-definition flowscan-frontend --query taskDefinition > frontend-task-def.json
           aws ecs describe-task-definition --task-definition flowscan-backend --query taskDefinition > backend-task-def.json
           aws ecs describe-task-definition --task-definition flowscan-ocr --query taskDefinition > ocr-task-def.json
 
-      # Update Frontend task definition
+      # Update task definitions conditionally
       - name: Update Frontend task definition
+        if: steps.changes.outputs.frontend == 'true'
         id: update-frontend-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
@@ -93,8 +119,8 @@ jobs:
           container-name: frontend
           image: ${{ env.ECR_FRONTEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
 
-      # Update Backend task definition
       - name: Update Backend task definition
+        if: steps.changes.outputs.backend == 'true'
         id: update-backend-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
@@ -102,8 +128,8 @@ jobs:
           container-name: csharp-backend
           image: ${{ env.ECR_BACKEND_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
 
-      # Update OCR task definition
       - name: Update OCR task definition
+        if: steps.changes.outputs.ocr == 'true'
         id: update-ocr-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
@@ -111,8 +137,9 @@ jobs:
           container-name: image-recognition
           image: ${{ env.ECR_OCR_REPOSITORY_URI }}:${{ env.IMAGE_TAG }}
 
-      # Deploy Frontend ECS Service
+      # Deploy services conditionally
       - name: Deploy Frontend to Amazon ECS
+        if: steps.changes.outputs.frontend == 'true'
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.update-frontend-task-def.outputs.task-definition }}
@@ -120,8 +147,8 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
-      # Deploy Backend ECS Service
       - name: Deploy Backend to Amazon ECS
+        if: steps.changes.outputs.backend == 'true'
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.update-backend-task-def.outputs.task-definition }}
@@ -129,8 +156,8 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
-      # Deploy OCR ECS Service
       - name: Deploy OCR to Amazon ECS
+        if: steps.changes.outputs.ocr == 'true'
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.update-ocr-task-def.outputs.task-definition }}
@@ -138,12 +165,12 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
-      # Notify about deployment status
-      - name: Deployment Status Notification
+      # Summary of what was deployed
+      - name: Deployment Summary
         if: always()
         run: |
-          if [ "${{ job.status }}" = "success" ]; then
-            echo "🚀 Deployment successful! Application is now live."
-          else
-            echo "❌ Deployment failed. Check the logs for more details."
-          fi
+          echo "Deployment Summary:"
+          echo "===================="
+          echo "Frontend: ${{ steps.changes.outputs.frontend == 'true' && '✅ Deployed' || '⏭️ Skipped (no changes)' }}"
+          echo "Backend: ${{ steps.changes.outputs.backend == 'true' && '✅ Deployed' || '⏭️ Skipped (no changes)' }}"
+          echo "OCR: ${{ steps.changes.outputs.ocr == 'true' && '✅ Deployed' || '⏭️ Skipped (no changes)' }}"
