@@ -47,6 +47,15 @@ def update_cache_data():
     except Exception as e:
         print(f"An error occurred while updating cache: {e}")
 
+# health checks for ecs
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint for container orchestration systems."""
+    return jsonify({
+        "status": "ok",
+        "message": "Service is healthy"
+    }), 200
+
 # Process an image for text recognition
 @app.route('/process-image', methods=['POST'])
 def process_image():

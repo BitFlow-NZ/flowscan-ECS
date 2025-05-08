@@ -46,7 +46,7 @@
       "healthCheck": {
         "command": [
           "CMD-SHELL",
-          "curl -f http://localhost:5001/swagger || exit 1"
+          "curl -f http://localhost:5001/health || exit 1"
         ],
         "interval": 40,
         "timeout": 20,
