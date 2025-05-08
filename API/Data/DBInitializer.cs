@@ -1,4 +1,4 @@
-using API.Models.Entities;
+using System.Text;
 using Microsoft.EntityFrameworkCore; // Add this line if Item class is in the Models namespace
 
 namespace API.Data
@@ -73,7 +73,7 @@ namespace API.Data
         private static List<string> ExtractInsertStatements(string script)
         {
             var insertStatements = new List<string>();
-            var lines = script.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
+            var lines = script.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries);
             var currentStatement = new StringBuilder();
             var insideInsert = false;
 
