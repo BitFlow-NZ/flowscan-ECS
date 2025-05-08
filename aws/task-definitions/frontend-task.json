@@ -47,7 +47,10 @@
         }
       },
       "healthCheck": {
-        "command": ["CMD-SHELL", "curl -f http://localhost:80/ || exit 1"],
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:80/health || exit 1"
+        ],
         "interval": 40,
         "timeout": 20,
         "retries": 3,
