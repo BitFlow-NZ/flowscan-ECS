@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace API.Data.Migrations
+namespace API.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20241206000049_migration_v15")]
-    partial class migration_v15
+    [Migration("20250508095936_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,49 @@ namespace API.Data.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
-            modelBuilder.Entity("API.Entities.Event", b =>
+            modelBuilder.Entity("API.Models.Entities.BarCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UnitId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UnitId");
+
+                    b.ToTable("BarCodes");
+                });
+
+            modelBuilder.Entity("API.Models.Entities.Credential", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("InvitationCodeHash")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Credentials");
+                });
+
+            modelBuilder.Entity("API.Models.Entities.Event", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -38,6 +80,14 @@ namespace API.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<string>("LastEditPerson")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<DateTime>("LastEditTime")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -49,9 +99,8 @@ namespace API.Data.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<string>("TheaterNumber")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("varchar(10)");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTime>("Time")
                         .HasColumnType("datetime(6)");
@@ -61,17 +110,13 @@ namespace API.Data.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("API.Entities.EventItem", b =>
+            modelBuilder.Entity("API.Models.Entities.EventItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("EditPerson")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("EditTime")
                         .HasColumnType("datetime(6)");
@@ -99,16 +144,13 @@ namespace API.Data.Migrations
                     b.ToTable("EventItems");
                 });
 
-            modelBuilder.Entity("API.Entities.Item", b =>
+            modelBuilder.Entity("API.Models.Entities.Item", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Barcode")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -117,6 +159,9 @@ namespace API.Data.Migrations
                     b.Property<string>("Img")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<DateTime>("LastEditTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -127,7 +172,7 @@ namespace API.Data.Migrations
                     b.ToTable("Items");
                 });
 
-            modelBuilder.Entity("API.Entities.OCRItem", b =>
+            modelBuilder.Entity("API.Models.Entities.OCRItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -142,7 +187,7 @@ namespace API.Data.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("UnitId")
+                    b.Property<int?>("UnitId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -154,7 +199,7 @@ namespace API.Data.Migrations
                     b.ToTable("OCRItems");
                 });
 
-            modelBuilder.Entity("API.Entities.Unit", b =>
+            modelBuilder.Entity("API.Models.Entities.Unit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -180,21 +225,34 @@ namespace API.Data.Migrations
                     b.ToTable("Units");
                 });
 
-            modelBuilder.Entity("API.Entities.EventItem", b =>
+            modelBuilder.Entity("API.Models.Entities.BarCode", b =>
                 {
-                    b.HasOne("API.Entities.Event", "Event")
+                    b.HasOne("API.Models.Entities.Unit", "Unit")
+                        .WithMany("BarCodes")
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("API.Models.Entities.EventItem", b =>
+                {
+                    b.HasOne("API.Models.Entities.Event", "Event")
                         .WithMany("EventItems")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Item", "Item")
+                    b.HasOne("API.Models.Entities.Item", "Item")
                         .WithMany()
-                        .HasForeignKey("ItemId");
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("API.Entities.Unit", "Unit")
+                    b.HasOne("API.Models.Entities.Unit", "Unit")
                         .WithMany()
-                        .HasForeignKey("UnitId");
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Event");
 
@@ -203,28 +261,27 @@ namespace API.Data.Migrations
                     b.Navigation("Unit");
                 });
 
-            modelBuilder.Entity("API.Entities.OCRItem", b =>
+            modelBuilder.Entity("API.Models.Entities.OCRItem", b =>
                 {
-                    b.HasOne("API.Entities.Item", "Item")
+                    b.HasOne("API.Models.Entities.Item", "Item")
                         .WithMany("OCRItems")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("API.Entities.Unit", "Unit")
+                    b.HasOne("API.Models.Entities.Unit", "Unit")
                         .WithMany("OCRItems")
                         .HasForeignKey("UnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Item");
 
                     b.Navigation("Unit");
                 });
 
-            modelBuilder.Entity("API.Entities.Unit", b =>
+            modelBuilder.Entity("API.Models.Entities.Unit", b =>
                 {
-                    b.HasOne("API.Entities.Item", "Item")
+                    b.HasOne("API.Models.Entities.Item", "Item")
                         .WithMany("Units")
                         .HasForeignKey("ItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -233,20 +290,22 @@ namespace API.Data.Migrations
                     b.Navigation("Item");
                 });
 
-            modelBuilder.Entity("API.Entities.Event", b =>
+            modelBuilder.Entity("API.Models.Entities.Event", b =>
                 {
                     b.Navigation("EventItems");
                 });
 
-            modelBuilder.Entity("API.Entities.Item", b =>
+            modelBuilder.Entity("API.Models.Entities.Item", b =>
                 {
                     b.Navigation("OCRItems");
 
                     b.Navigation("Units");
                 });
 
-            modelBuilder.Entity("API.Entities.Unit", b =>
+            modelBuilder.Entity("API.Models.Entities.Unit", b =>
                 {
+                    b.Navigation("BarCodes");
+
                     b.Navigation("OCRItems");
                 });
 #pragma warning restore 612, 618
