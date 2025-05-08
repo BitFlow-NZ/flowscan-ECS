@@ -113,40 +113,14 @@ var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
 try
 {
-    RepairMigrationHistory.Repair(context, logger);
-    // Check if migrations history table exists
-    bool migrationsHistoryExists = false;
-    try
+    using (var conn = context.Database.GetDbConnection())
     {
-        // Try to access the migrations history table
-        migrationsHistoryExists = context.Database.GetAppliedMigrations().Any() ||
-                                  context.Database.GetPendingMigrations().Any();
-    }
-    catch
-    {
-        // Table doesn't exist or can't be accessed
-        migrationsHistoryExists = false;
+        conn.Open();
+        logger.LogInformation("Database connection established!");
+        conn.Close();
     }
 
-    if (migrationsHistoryExists)
-    {
-        // Apply any pending migrations if the migrations history table exists
-        logger.LogInformation("Applying any pending migrations...");
-        context.Database.Migrate();
-    }
-    else
-    {
-        // Migrations history table doesn't exist but database might have tables already
-        // Skip migrations and just ensure connection is working
-        logger.LogInformation("Skipping migrations, database structure already exists");
-
-        // Just execute a simple query to verify connection
-        context.Database.ExecuteSqlRaw("SELECT 1");
-    }
-
-    logger.LogInformation("Database connection successful.");
-
-    // Always try to seed data if needed
+    // Then try to initialize (which now handles missing tables)
     DBInitializer.Initialize(context);
     logger.LogInformation("Database initialization complete.");
 }

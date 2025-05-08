@@ -1,5 +1,11 @@
+using API.Models.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
-using Microsoft.EntityFrameworkCore; // Add this line if Item class is in the Models namespace
 
 namespace API.Data
 {
@@ -7,26 +13,120 @@ namespace API.Data
     {
         public static void Initialize(StoreContext context)
         {
-            if (context.Items.Any() || context.Units.Any() || context.OCRItems.Any() || context.Events.Any() || context.EventItems.Any() || context.BarCodes.Any() || context.Credentials.Any())
+            // Check if required tables exist first
+            if (!TablesExist(context))
             {
-                // Database has been seeded already
-                return;
+                // Tables are missing, create them
+                CreateRequiredTables(context);
             }
 
+            // Only try to seed data if we have tables
+            if (TablesExist(context))
+            {
+                // Check if tables already have data
+                if (!context.Items.Any() && !context.Units.Any())
+                {
+                    try
+                    {
+                        // Execute SQL script for seeding
+                        ExecuteSqlScript(context);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error seeding data: {ex.Message}");
+                        // No need to throw - we can continue without seeded data
+                    }
+                }
+            }
+        }
+
+        private static bool TablesExist(StoreContext context)
+        {
             try
             {
-                ExecuteSqlScript(context);
-                // Check if data was successfully loaded from script
-                if (context.Items.Any())
-                {
-                    Console.WriteLine("Database initialized from SQL script.");
-                    return;
-                }
+                // Check if key tables exist using SQL
+                using var connection = context.Database.GetDbConnection();
+                connection.Open();
+                using var command = connection.CreateCommand();
+                command.CommandText = @"
+                    SELECT COUNT(*) 
+                    FROM information_schema.tables 
+                    WHERE table_schema = DATABASE() 
+                    AND table_name IN ('Items', 'Units', 'BarCodes', 'Events', 'EventItems', 'OCRItems', 'Credentials');";
+                var result = command.ExecuteScalar();
+                connection.Close();
+
+                // If we found all 7 tables
+                return Convert.ToInt32(result) == 7;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private static void CreateRequiredTables(StoreContext context)
+        {
+            try
+            {
+                // Use migrations to create tables
+                context.Database.Migrate();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error executing SQL script: {ex.Message}");
-                // Continue to fallback seeding method
+                Console.WriteLine($"Error creating tables: {ex.Message}");
+
+                // If migrations fail, create essential tables with raw SQL
+                CreateTablesWithRawSQL(context);
+            }
+        }
+
+        private static void CreateTablesWithRawSQL(StoreContext context)
+        {
+            // SQL for creating required tables if not exists
+            string[] createTableCommands = {
+                @"CREATE TABLE IF NOT EXISTS `Items` (
+                    `Id` int NOT NULL AUTO_INCREMENT,
+                    `Name` longtext CHARACTER SET utf8mb4 NOT NULL,
+                    `Description` longtext CHARACTER SET utf8mb4 NULL,
+                    `Img` longtext CHARACTER SET utf8mb4 NULL,
+                    `LastEditTime` datetime(6) NOT NULL,
+                    PRIMARY KEY (`Id`)
+                );",
+
+                @"CREATE TABLE IF NOT EXISTS `Units` (
+                    `Id` int NOT NULL AUTO_INCREMENT,
+                    `ItemId` int NOT NULL,
+                    PRIMARY KEY (`Id`),
+                    KEY `IX_Units_ItemId` (`ItemId`),
+                    CONSTRAINT `FK_Units_Items_ItemId` FOREIGN KEY (`ItemId`) REFERENCES `Items` (`Id`) ON DELETE CASCADE
+                );",
+
+                @"CREATE TABLE IF NOT EXISTS `BarCodes` (
+                    `Id` int NOT NULL AUTO_INCREMENT,
+                    `Type` int NOT NULL,
+                    `Content` longtext CHARACTER SET utf8mb4 NOT NULL,
+                    `UnitId` int NOT NULL,
+                    PRIMARY KEY (`Id`),
+                    KEY `IX_BarCodes_UnitId` (`UnitId`),
+                    CONSTRAINT `FK_BarCodes_Units_UnitId` FOREIGN KEY (`UnitId`) REFERENCES `Units` (`Id`) ON DELETE CASCADE
+                );"
+                // Add other tables as needed
+            };
+
+            using var transaction = context.Database.BeginTransaction();
+            try
+            {
+                foreach (var command in createTableCommands)
+                {
+                    context.Database.ExecuteSqlRaw(command);
+                }
+                transaction.Commit();
+            }
+            catch
+            {
+                transaction.Rollback();
+                throw;
             }
         }
 
@@ -73,7 +173,7 @@ namespace API.Data
         private static List<string> ExtractInsertStatements(string script)
         {
             var insertStatements = new List<string>();
-            var lines = script.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries);
+            var lines = script.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             var currentStatement = new StringBuilder();
             var insideInsert = false;
 
