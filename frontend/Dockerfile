@@ -37,15 +37,11 @@ RUN echo "window.ENV = { \
 
 RUN npm run build && npm prune --production
 
-FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Create minimal nginx configuration (just for serving static files)
-RUN npm run build && npm prune --production
 
 FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
 
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
