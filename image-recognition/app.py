@@ -19,7 +19,7 @@ if not os.path.exists(cache_file):
     with open(cache_file, "w") as f:
         f.write("[]")  # Empty JSON array
         
-API_URL = "http://csharp-backend:5001/api/OCRItem"  # for ocr-server
+API_URL = "http://flowscan-backend-service:5001/api/OCRItem"  # for ocr-server
 
 # Swagger configuration
 SWAGGER_URL = '/swagger'
