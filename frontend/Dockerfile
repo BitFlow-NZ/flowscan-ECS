@@ -35,28 +35,12 @@ FROM nginx:alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 
 # Inject the env-config.js script into the index.html file
-# FIX: Updated path to point to the nginx html directory
 RUN sed -i 's/<head>/<head><script src="\/env-config.js"><\/script>/' /usr/share/nginx/html/index.html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Create docker-entrypoint script for runtime config
-RUN echo '#!/bin/sh\n\
-# Generate runtime env-config.js\n\
-echo "window.ENV = {\n\
-  REACT_APP_ENV: \"$REACT_APP_ENV\",\n\
-  REACT_APP_AWS_BUCKET_NAME: \"$REACT_APP_AWS_BUCKET_NAME\",\n\
-  REACT_APP_AWS_REGION: \"$REACT_APP_AWS_REGION\",\n\
-  REACT_APP_API_URL: \"$REACT_APP_API_URL\",\n\
-  REACT_APP_AWS_ACCESS_KEY_ID: \"$REACT_APP_AWS_ACCESS_KEY_ID\",\n\
-  REACT_APP_AWS_SECRET_ACCESS_KEY: \"$REACT_APP_AWS_SECRET_ACCESS_KEY\",\n\
-  REACT_APP_IMG_URL: \"$REACT_APP_IMG_URL\"\n\
-};" > /usr/share/nginx/html/env-config.js\n\
-\n\
-# Start nginx\n\
-exec nginx -g "daemon off;"\n' > /docker-entrypoint.sh
-
-# Make entrypoint script executable
+# Copy the entrypoint script and set permissions
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
