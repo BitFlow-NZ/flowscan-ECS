@@ -34,7 +34,6 @@ namespace API.Data
                     catch (Exception ex)
                     {
                         Console.WriteLine($"Error seeding data: {ex.Message}");
-                        // No need to throw - we can continue without seeded data
                     }
                 }
             }
@@ -44,7 +43,7 @@ namespace API.Data
         {
             try
             {
-                // Check if key tables exist using SQL
+                // Create a new connection for this check
                 using var connection = context.Database.GetDbConnection();
                 connection.Open();
                 using var command = connection.CreateCommand();
@@ -54,10 +53,11 @@ namespace API.Data
                     WHERE table_schema = DATABASE() 
                     AND table_name IN ('Items', 'Units', 'BarCodes', 'Events', 'EventItems', 'OCRItems', 'Credentials');";
                 var result = command.ExecuteScalar();
+                var count = Convert.ToInt32(result);
                 connection.Close();
 
                 // If we found all 7 tables
-                return Convert.ToInt32(result) == 7;
+                return count == 7;
             }
             catch
             {
@@ -77,6 +77,7 @@ namespace API.Data
                 Console.WriteLine($"Error creating tables: {ex.Message}");
 
                 // If migrations fail, create essential tables with raw SQL
+                // Don't reuse connections - let EF create fresh ones
                 CreateTablesWithRawSQL(context);
             }
         }
@@ -111,22 +112,21 @@ namespace API.Data
                     KEY `IX_BarCodes_UnitId` (`UnitId`),
                     CONSTRAINT `FK_BarCodes_Units_UnitId` FOREIGN KEY (`UnitId`) REFERENCES `Units` (`Id`) ON DELETE CASCADE
                 );"
-                // Add other tables as needed
             };
 
-            using var transaction = context.Database.BeginTransaction();
-            try
+            // Execute each command separately without transaction to avoid connection issues
+            foreach (var command in createTableCommands)
             {
-                foreach (var command in createTableCommands)
+                try
                 {
+                    // Let EF manage the connection for each command
                     context.Database.ExecuteSqlRaw(command);
                 }
-                transaction.Commit();
-            }
-            catch
-            {
-                transaction.Rollback();
-                throw;
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error executing SQL: {ex.Message}");
+                    // Continue with other commands
+                }
             }
         }
 
