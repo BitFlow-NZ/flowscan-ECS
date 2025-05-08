@@ -107,8 +107,13 @@ var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
 
+
+
+
+
 try
 {
+    RepairMigrationHistory.Repair(context, logger);
     // Check if migrations history table exists
     bool migrationsHistoryExists = false;
     try
