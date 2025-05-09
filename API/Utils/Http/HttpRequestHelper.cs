@@ -11,7 +11,7 @@ namespace API.Utils.Http
     {
         private readonly HttpClient _httpClient;
         private readonly string BaseURLDev = "https://inflowcan.net/api";
-        private readonly string BaseURLProd = "http://flowscan-image-recognition-service/api";
+        private readonly string BaseURLProd = "http://ocr-service.flowcan-service:5001/api";
 
         public HttpRequestHelper(HttpClient httpClient)
         {
