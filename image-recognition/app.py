@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 # Initialize global variables
-cache_dir = "/app/cache"
+cache_dir = "/tmp/flowscan-cache"
 
 if not os.path.exists(cache_dir):
     os.makedirs(cache_dir)
