@@ -28,8 +28,7 @@ const TakePicture = ({
   // const lastScannedRef = useRef<{ code: string; timestamp: number }>({ code: '', timestamp: 0 });
   const isHandlingScanRef = useRef(false); // 🔒 是否正在处理中，避免连续调用
   const scannedCodes = useRef<Set<string>>(new Set());
-const lastScannedRef = useRef<string>(''); 
- 
+  const lastScannedRef = useRef<string>('');
 
   const SCAN_INTERVAL_MS = 3000;
   // Fetch available devices
@@ -59,13 +58,13 @@ const lastScannedRef = useRef<string>('');
   // AWS Configuration
   AWS.config.update({
     accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
-    secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY, 
+    secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY,
     region: (window as any).ENV?.REACT_APP_AWS_REGION,
   });
 
   const s3 = new AWS.S3({
     useAccelerateEndpoint: true,
-    region: REACT_APP_AWS_REGION,
+    region: (window as any).ENV?.REACT_APP_AWS_REGION,
   });
 
   const compressImage = async (imageData: string): Promise<string> => {
@@ -104,9 +103,10 @@ const lastScannedRef = useRef<string>('');
       );
       const fileType = compressedImage.split(';')[0].split(':')[1];
 
-      const bucketName =  (window as any).ENV?.REACT_APP_AWS_BUCKET_NAME || 
-      import.meta.env.VITE_AWS_BUCKET_NAME || 
-      'flowscan-web';
+      const bucketName =
+        (window as any).ENV?.REACT_APP_AWS_BUCKET_NAME ||
+        import.meta.env.VITE_AWS_BUCKET_NAME ||
+        'flowscan-web';
 
       // S3 upload parameters
       const params = {
