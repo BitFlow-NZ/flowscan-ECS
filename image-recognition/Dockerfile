@@ -16,7 +16,7 @@ FROM python:3.11-alpine
 WORKDIR /app
 
 # Install minimal runtime dependencies
-RUN apk add --no-cache libffi
+RUN apk add --no-cache libffi curl
 
 # Copy only the installed packages from builder
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
@@ -25,8 +25,13 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 # Copy application code
 COPY . .
 
-# Create cache directory
-RUN mkdir -p /app/cache
+# Create cache directory in /tmp instead of /app for write access
+RUN mkdir -p /tmp/flowscan-cache
+
+
+
+# Add start period to health check to give Gunicorn time to start
+HEALTHCHECK CMD curl -f http://localhost:5001/health || exit 1
 
 EXPOSE 5001
 
