@@ -10,8 +10,8 @@ namespace API.Utils.Http
     public class HttpRequestHelper
     {
         private readonly HttpClient _httpClient;
-        private readonly string BaseURLDev = "https://inflowcan.net/api";
-        private readonly string BaseURLProd = "http://ocr-service.flowscan-service:5001";
+        private readonly string BaseURLDev = "http://localhost:5001";
+        private readonly string BaseURLProd = Environment.GetEnvironmentVariable("OCR_REQUEST_BASEURL_PROD") ?? "http://ocr-service.flowscan-service:5001";
 
         public HttpRequestHelper(HttpClient httpClient)
         {

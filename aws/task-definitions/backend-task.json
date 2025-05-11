@@ -20,7 +20,11 @@
       ],
       "environment": [
         { "name": "ASPNETCORE_ENVIRONMENT", "value": "Production" },
-        { "name": "ASPNETCORE_URLS", "value": "http://+:5001" }
+        { "name": "ASPNETCORE_URLS", "value": "http://+:5001" },
+        {
+          "name": "OCR_REQUEST_BASEURL_PROD",
+          "value": "http://ocr-service.flowscan-service:5001"
+        }
       ],
       "secrets": [
         {
