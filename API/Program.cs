@@ -8,6 +8,9 @@ using API.Services;
 using API.Utils.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using Amazon.S3;
+using Amazon.Extensions.NETCore.Setup;
+using Amazon;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +21,10 @@ builder.Services.AddScoped<HttpRequestHelper>();
 builder.Services.AddScoped<OCRItemService>();
 builder.Services.AddScoped<BarCodeRepository>();
 builder.Services.AddScoped<BarCodeService>();
+builder.Services.AddAWSService<IAmazonS3>(new AWSOptions
+{
+    Region = RegionEndpoint.APSoutheast2
+});
 
 // Add services to the container.
 builder.Services.AddControllers(options =>

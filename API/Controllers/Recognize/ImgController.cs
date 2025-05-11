@@ -4,7 +4,7 @@ using API.Models.Response;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers.Img
+namespace API.Controllers.Recognize
 {
 
     public class ImgController : BaseApiController
