@@ -22,13 +22,13 @@
         { "name": "REACT_APP_ENV", "value": "prod" },
         { "name": "REACT_APP_AWS_BUCKET_NAME", "value": "flowscan-web" },
         { "name": "REACT_APP_AWS_REGION", "value": "ap-southeast-2" },
-        { "name": "REACT_APP_API_URL", "value": "" },
-        {
-          "name": "REACT_APP_IMG_URL",
-          "value": "https://bitflow-website.s3.ap-southeast-2.amazonaws.com"
-        }
+        { "name": "REACT_APP_API_URL", "value": "/api" }
       ],
       "secrets": [
+        {
+          "name": "REACT_APP_IMG_URL",
+          "valueFrom": "arn:aws:ssm:ap-southeast-2:122610479918:parameter/flowscan/REACT_APP_IMG_URL"
+        },
         {
           "name": "REACT_APP_AWS_ACCESS_KEY_ID",
           "valueFrom": "arn:aws:ssm:ap-southeast-2:122610479918:parameter/flowscan/REACT_APP_AWS_ACCESS_KEY_ID"
