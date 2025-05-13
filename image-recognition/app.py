@@ -123,7 +123,7 @@ def create_app():
             
             return jsonify({
                 "success": True,
-                "data": [{'item_id': item_id, 'unit_id': unit_id} for item_id, unit_id, _ in matches],
+                "data": [{'item_id': item_id, 'unit_id': unit_id, 'confidence':confidence} for item_id, unit_id, confidence in matches],
                 "message": "Match successfully"
             }), 200
     

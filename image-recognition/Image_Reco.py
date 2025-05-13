@@ -95,72 +95,72 @@ def image_reco_vision(image_url):
 
     return ' '.join(all_text)
 
+
 # Define function to find most similar product using fuzzy matching
 def fuzzy_match(products_df, cleaned_text):
     if not isinstance(cleaned_text, str) or not cleaned_text.strip():
-        raise ValueError("Can not recognize product text.")
+        raise ValueError("Cannot recognize product text.")
 
-    # List to store matching products
     matches = []
+    matched_items = []
+    cleaned_text = cleaned_text.strip().lower()
 
-    # Loop through all products and compute fuzzy match score
+    # ---------- 1. Fuzzy matching ----------
     for idx, row in products_df.iterrows():
         ocr_keyword = row.get('ocrKeyword', None)
         if ocr_keyword is None or not isinstance(ocr_keyword, str):
             continue
 
-        ocr_keyword = ocr_keyword.strip()
-        # Compute fuzzy match score
-        score = fuzz.ratio(ocr_keyword, cleaned_text)
-        if score > 50:  # Only include matches with score > 50
-            matches.append((row['itemId'], row['unitId'], score))
+        ocr_keyword = ocr_keyword.strip().lower()
+        fuzzy_score = fuzz.ratio(ocr_keyword, cleaned_text)
 
-    if matches:
-        # Sort matches by score in descending order
-        matches.sort(key=lambda x: x[2], reverse=True)
-        matched_item = []
-        seen_item_ids = set()
-        for i in matches:
-            if i[0] not in seen_item_ids:
-                matched_item.append(i)
-                seen_item_ids.add(i[0])
-                if len(matched_item) == 3:
-                    break
-        # Replace NaN with None for JSON compatibility
-        matched_item = [(item_id, None if pd.isna(unit_id) else int(unit_id) if isinstance(unit_id, float) else unit_id, score) for item_id, unit_id, score in matched_item]
+        if fuzzy_score > 50:
+            confidence = min(99, fuzzy_score)
+            unit_id = row['unitId']
+            unit_id = None if pd.isna(unit_id) else int(unit_id) if isinstance(unit_id, float) else unit_id
+            matches.append((row['itemId'], unit_id, int(round(confidence))))
 
-    else:
+    # ---------- 2. If fuzzy match fails, try overlap match ----------
+    if not matches:
         for idx, row in products_df.iterrows():
             ocr_keyword = row.get('ocrKeyword', None)
             if ocr_keyword is None or not isinstance(ocr_keyword, str):
                 continue
 
             ocr_keyword = ocr_keyword.strip()
-            # Compute fuzzy match score
-            ocr_words = set(ocr_keyword.split())
+            ocr_words = set(ocr_keyword.lower().split())
             cleaned_words = set(cleaned_text.lower().split())
 
-            matched_words = ocr_words & cleaned_words
-            score = len(matched_words) / len(ocr_words) * 100
-            if score > 20:  # Only include matches with score > 20
-                matches.append((row['itemId'], row['unitId'], score))
+            overlap = cleaned_words & ocr_words
 
+            if len(overlap) < 3:
+                continue
+
+            precision = len(overlap) / len(ocr_words) if ocr_words else 0
+            recall = len(overlap) / len(cleaned_words) if cleaned_words else 0
+
+            if precision + recall == 0:
+                continue
+
+            f1_score = 2 * precision * recall / (precision + recall)
+            confidence = int(round(min(99, 50 + f1_score * 100)))
+
+            unit_id = row['unitId']
+            unit_id = None if pd.isna(unit_id) else int(unit_id) if isinstance(unit_id, float) else unit_id
+            matches.append((row['itemId'], unit_id, confidence))
+
+    # ---------- 3. Select top 3 by confidence, one per itemId ----------
+    if matches:
         matches.sort(key=lambda x: x[2], reverse=True)
-        matched_item = []
         seen_item_ids = set()
-        for i in matches:
-            if i[0] not in seen_item_ids:
-                matched_item.append(i)
-                seen_item_ids.add(i[0])
-                if len(matched_item) == 3:
+        for item in matches:
+            if item[0] not in seen_item_ids:
+                matched_items.append(item)
+                seen_item_ids.add(item[0])
+                if len(matched_items) == 3:
                     break
 
-        # Replace NaN with None for JSON compatibility
-        matched_item = [
-            (item_id, None if pd.isna(unit_id) else int(unit_id) if isinstance(unit_id, float) else unit_id, score) for
-            item_id, unit_id, score in matched_item]
-
-    return matched_item  # Return top 3 matches
+    return matched_items
 
 
 # Function to fetch data from the API
