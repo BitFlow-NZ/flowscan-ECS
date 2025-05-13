@@ -4,28 +4,32 @@ from Image_Reco import decode_gs1_barcode, fuzzy_match, fetch_items_from_api, im
 import pandas as pd
 import os
 
-# Initialize global variables outside the application context
-cache_dir = "/tmp/flowscan-cache"
 
-if not os.path.exists(cache_dir):
-    os.makedirs(cache_dir)
-
-cache_file = os.path.join(cache_dir, "ocr_cache.json")
-
-# Create empty cache file if it doesn't exist
-if not os.path.exists(cache_file):
-    with open(cache_file, "w") as f:
-        f.write("[]")  # Empty JSON array
-
-API_URL = "http://backend-service.flowscan-service:5001/api/OCRItem"  # for ocr-server
+# API_URL = "http://backend-service.flowscan-service:5001/api/OCRItem"  # for ocr-server
+API_URL = "https://inflowcan.net/api/OCRItem"
 
 # Swagger configuration
 SWAGGER_URL = '/swagger'
 API_YAML_FILE = 'static/swagger.yaml'  # Path to the YAML file
 
+cache_dir = "/tmp/flowscan-cache"
+cache_file = os.path.join(cache_dir, "ocr_cache.json")
+
+def ensure_cache_dir_exists():
+    if not os.path.exists(cache_dir):
+        os.makedirs(cache_dir)
+
+def ensure_ocr_cache_file_exists():
+    # Create empty cache file if it doesn't exist
+    if not os.path.exists(cache_file):
+        with open(cache_file, "w") as f:
+            f.write('[]')  # Empty JSON array
+
 def update_cache_data():
     """Function to update cache data from API"""
     print("Updating cache...")
+    ensure_cache_dir_exists()
+    ensure_ocr_cache_file_exists()
     try:
         fetched_data = fetch_items_from_api(API_URL)
         if fetched_data is not None:
