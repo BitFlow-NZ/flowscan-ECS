@@ -8,12 +8,13 @@ import {
   CloudUploadOutlined,
 } from '@ant-design/icons';
 import Webcam from 'react-webcam';
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 import { Unit } from '../type';
 import { UploadFile } from 'antd/es/upload/interface';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 //import ImgCrop from 'antd-img-crop';
+import { uploadToS3_UnitsImage } from '@/utils/awsUploader';
 
 type UnitsFormProps = {
   value?: Unit[];
@@ -82,26 +83,28 @@ const UnitsForm: React.FC<UnitsFormProps> = ({
     }
   }, [isCameraOpen, webcamRef.current]);
 
-  AWS.config.update({
-    accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
-    secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY, 
-    region: (window as any).ENV?.REACT_APP_AWS_REGION,
-  });
+  // AWS.config.update({
+  //   accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY, 
+  //   region: (window as any).ENV?.REACT_APP_AWS_REGION,
+  // });
 
-  const s3 = new AWS.S3();
+  // const s3 = new AWS.S3();
 
-  // const uploadToS3 = async (imageData: string): Promise<string | null> => {
+  
+  // const uploadToS3 = async (file: File | string): Promise<string | null> => {
   //   try {
-  //     const base64Data = Buffer.from(imageData.replace(/^data:image\/\w+;base64,/, ''), 'base64');
   //     const params = {
   //       Bucket: REACT_APP_AWS_BUCKET_NAME!,
-  //       Key: `units-image/${Date.now()}.png`,
-  //       Body: base64Data,
-  //       ContentType: 'image/png',
+  //       Key: `units-images-new/${Date.now()}.png`,
+  //       Body:
+  //         typeof file === 'string'
+  //           ? Buffer.from(file.replace(/^data:image\/\w+;base64,/, ''), 'base64')
+  //           : file,
+  //       ContentType: typeof file === 'string' ? 'image/png' : file.type,
   //     };
-
   //     const uploadResult = await s3.upload(params).promise();
-  //    // message.success('Image uploaded successfully!');
+  //     message.success('Image uploaded successfully!');
   //     return uploadResult.Location;
   //   } catch (error) {
   //     console.error('S3 Upload Error:', error);
@@ -109,26 +112,8 @@ const UnitsForm: React.FC<UnitsFormProps> = ({
   //     return null;
   //   }
   // };
-  const uploadToS3 = async (file: File | string): Promise<string | null> => {
-    try {
-      const params = {
-        Bucket: REACT_APP_AWS_BUCKET_NAME!,
-        Key: `units-images-new/${Date.now()}.png`,
-        Body:
-          typeof file === 'string'
-            ? Buffer.from(file.replace(/^data:image\/\w+;base64,/, ''), 'base64')
-            : file,
-        ContentType: typeof file === 'string' ? 'image/png' : file.type,
-      };
-      const uploadResult = await s3.upload(params).promise();
-      message.success('Image uploaded successfully!');
-      return uploadResult.Location;
-    } catch (error) {
-      console.error('S3 Upload Error:', error);
-      message.error('Failed to upload image.');
-      return null;
-    }
-  };
+ 
+  
 
   const handleCapture = () => {
     if (!webcamRef.current) return;
@@ -153,7 +138,7 @@ const UnitsForm: React.FC<UnitsFormProps> = ({
     const croppedCanvas = cropper.getCroppedCanvas();
     const croppedImage = croppedCanvas.toDataURL('image/png');
 
-    const imageUrl = await uploadToS3(croppedImage);
+    const imageUrl = await uploadToS3_UnitsImage(croppedImage);
     if (imageUrl) {
       setFileList([
         { uid: Date.now().toString(), name: 'cropped-image.png', status: 'done', url: imageUrl },
@@ -198,7 +183,7 @@ const UnitsForm: React.FC<UnitsFormProps> = ({
   const handleCustomUpload = async (options: any, index: number) => {
     const { file, onSuccess, onError } = options;
     try {
-      const imageUrl = await uploadToS3(file);
+      const imageUrl = await uploadToS3_UnitsImage(file);
       if (imageUrl) {
         const updatedUnits = [...value];
         updatedUnits[index].img = imageUrl;

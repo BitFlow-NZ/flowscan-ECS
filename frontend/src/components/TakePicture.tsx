@@ -1,11 +1,12 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 import Webcam from 'react-webcam';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { Button, Empty, Typography, Flex, Popover, message, Select } from 'antd';
 import { Item } from '../type';
 import { imageRecognition, recognizeBarcode } from '@/services/ant-design-pro/api';
 import { BarcodeScanner } from 'react-barcode-scanner';
+import { uploadToS3_CapturedImage } from '@/utils/awsUploader';
 
 const ExamplePicture = `${window.ENV?.REACT_APP_IMG_URL}/image/Example+Picture.jpg`;
 
@@ -26,7 +27,7 @@ const TakePicture = ({
 
   const [barcodePaused, setBarcodePaused] = useState(false);
   // const lastScannedRef = useRef<{ code: string; timestamp: number }>({ code: '', timestamp: 0 });
-  const isHandlingScanRef = useRef(false); // 🔒 是否正在处理中，避免连续调用
+  const isHandlingScanRef = useRef(false);
   const scannedCodes = useRef<Set<string>>(new Set());
   const lastScannedRef = useRef<string>('');
 
@@ -55,78 +56,90 @@ const TakePicture = ({
     setSelectedDeviceId(deviceId);
   };
 
-  // AWS Configuration
-  AWS.config.update({
-    accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
-    secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY,
-    region: (window as any).ENV?.REACT_APP_AWS_REGION,
-  });
+  // // AWS Configuration
+  // AWS.config.update({
+  //   accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY,
+  //   region: (window as any).ENV?.REACT_APP_AWS_REGION,
+  // });
 
-  const s3 = new AWS.S3({
-    useAccelerateEndpoint: true,
-    region: (window as any).ENV?.REACT_APP_AWS_REGION,
-  });
+  // const s3 = new AWS.S3({
+  //   useAccelerateEndpoint: true,
+  //   region: (window as any).ENV?.REACT_APP_AWS_REGION,
+  // });
 
-  const compressImage = async (imageData: string): Promise<string> => {
-    const img = new Image();
-    img.src = imageData;
-    await new Promise<void>((resolve) => {
-      img.onload = () => resolve();
-    });
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+  // const compressImage = async (imageData: string): Promise<string> => {
+  //   const img = new Image();
+  //   img.src = imageData;
+  //   await new Promise<void>((resolve) => {
+  //     img.onload = () => resolve();
+  //   });
+  //   const canvas = document.createElement('canvas');
+  //   const ctx = canvas.getContext('2d');
 
-    if (!ctx) throw new Error('Failed to get canvas context');
+  //   if (!ctx) throw new Error('Failed to get canvas context');
 
-    canvas.width = 1920;
-    canvas.height = 1080;
+  //   canvas.width = 1920;
+  //   canvas.height = 1080;
 
-    ctx.drawImage(img, 0, 0, 1920, 1080);
+  //   ctx.drawImage(img, 0, 0, 1920, 1080);
 
-    // Convert the canvas to compressed base64 image
-    return canvas.toDataURL('image/png', 0.8);
-  };
+  //   // Convert the canvas to compressed base64 image
+  //   return canvas.toDataURL('image/png', 0.8);
+  // };
 
-  // Upload image to S3
-  const uploadToS3 = async (imageData: string): Promise<AWS.S3.ManagedUpload.SendData> => {
-    setIsUploading(true);
+  // // Upload image to S3
+  // const uploadToS3 = async (imageData: string): Promise<AWS.S3.ManagedUpload.SendData> => {
+  //   setIsUploading(true);
 
-    try {
-      // Compress the image before converting it to a buffer
-      console.time('Compression Time');
-      const compressedImage = await compressImage(imageData);
-      console.timeEnd('Compression Time');
+  //   try {
+  //     // Compress the image before converting it to a buffer
+  //     console.time('Compression Time');
+  //     const compressedImage = await compressImage(imageData);
+  //     console.timeEnd('Compression Time');
 
-      const base64Data = Buffer.from(
-        compressedImage.replace(/^data:image\/\w+;base64,/, ''),
-        'base64',
-      );
-      const fileType = compressedImage.split(';')[0].split(':')[1];
+  //     const base64Data = compressedImage.replace(/^data:image\/\w+;base64,/, '');
+  //     const fileType = compressedImage.split(';')[0].split(':')[1];
 
-      const bucketName =
-        (window as any).ENV?.REACT_APP_AWS_BUCKET_NAME ||
-        import.meta.env.VITE_AWS_BUCKET_NAME ||
-        'flowscan-web';
+  //     //Get pre-signed URL from backend
+  //     const presignedResponse = await fetch('/api/upload/get-presigned-url', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         fileType: fileType,
+  //         fileExtension: 'png',
+  //         folder: 'captured-image',
+  //       }),
+  //     });
+  //     if (!presignedResponse.ok) {
+  //       throw new Error('Failed to get upload URL');
+  //     }
+  //     const presignedData = await presignedResponse.json();
+  //     const { uploadUrl, publicUrl } = presignedData;
 
-      // S3 upload parameters
-      const params = {
-        Bucket: bucketName,
-        Key: `captured-image/${Date.now()}.png`,
-        Body: base64Data,
-        ContentType: fileType,
-      };
-
-      console.time('Upload Time');
-      const uploadResult = await s3.upload(params).promise();
-      console.timeEnd('Upload Time');
-
-      return uploadResult;
-    } catch (error) {
-      setIsUploading(false);
-      console.error('S3 Upload Error:', error);
-      throw error;
-    }
-  };
+  //     //2. Upload directly to S3 using pre-signed URL
+  //     console.time('Upload Time');
+  //     const uploadResponse = await fetch(uploadUrl, {
+  //       method: 'PUT',
+  //       headers: {
+  //         'Content-Type': fileType,
+  //       },
+  //       body: Buffer.from(base64Data, 'base64'),
+  //     });
+  //     if (!uploadResponse.ok) {
+  //       throw new Error('Failed to upload to S3');
+  //     }
+  //     console.timeEnd('Upload Time');
+  //     return publicUrl;
+  //   } catch (error) {
+  //     console.error('Upload Error:', error);
+  //     throw error;
+  //   } finally {
+  //     setIsUploading(false);
+  //   }
+  // };
 
   // Capture picture from webcam
   const capture = useCallback(async () => {
@@ -144,9 +157,9 @@ const TakePicture = ({
       console.log('Captured Image Size (Base64):', imageSrc.length);
 
       // Compress and upload the image
-      const compressedImage = await compressImage(imageSrc);
-      const uploadResult = await uploadToS3(compressedImage);
-      const uploadedImageUrl = uploadResult.Location;
+     
+      const uploadedImageUrl = await uploadToS3_CapturedImage(imageSrc);
+      
 
       // Perform image recognition
       const recognitionResponse = await imageRecognition({ imageUrl: uploadedImageUrl });

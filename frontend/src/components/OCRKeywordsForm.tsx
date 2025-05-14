@@ -2,9 +2,10 @@ import React, { useState, useRef} from 'react';
 import { Form, Input, Button, Select, message, Modal, Upload } from 'antd';
 import { CameraOutlined, PlusOutlined, MinusCircleOutlined,CloudUploadOutlined} from '@ant-design/icons';
 import Webcam from 'react-webcam';
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 import { OCRKeywords } from '@/services/ant-design-pro/api';
 import { Keyword, Unit } from '../type';
+import {  uploadToS3_CapturedImage } from '@/utils/awsUploader';
 //import { UploadFile } from 'antd/es/upload/interface';
 
 type OCRKeywordsFormProps = {
@@ -59,58 +60,60 @@ const OCRKeywordsForm: React.FC<OCRKeywordsFormProps> = ({
     }
   }, [isCameraOpen, webcamRef.current]);
   
-  AWS.config.update({
-    accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
-    secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY, 
-    region: (window as any).ENV?.REACT_APP_AWS_REGION,
-  });
+  // AWS.config.update({
+  //   accessKeyId: (window as any).ENV?.REACT_APP_AWS_ACCESS_KEY_ID,
+  //   secretAccessKey: (window as any).ENV?.REACT_APP_AWS_SECRET_ACCESS_KEY, 
+  //   region: (window as any).ENV?.REACT_APP_AWS_REGION,
+  // });
 
-  const s3 = new AWS.S3({
-    useAccelerateEndpoint: true,
-    region: REACT_APP_AWS_REGION,
-  });
+  // const s3 = new AWS.S3({
+  //   useAccelerateEndpoint: true,
+  //   region: REACT_APP_AWS_REGION,
+  // });
 
-  const compressImage = async (imageData: string): Promise<string> => {
-    const img = new Image();
-    img.src = imageData;
-    await new Promise<void>((resolve) => {
-      img.onload = () => resolve();
-    });
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
+  // const compressImage = async (imageData: string): Promise<string> => {
+  //   const img = new Image();
+  //   img.src = imageData;
+  //   await new Promise<void>((resolve) => {
+  //     img.onload = () => resolve();
+  //   });
+  //   const canvas = document.createElement('canvas');
+  //   const ctx = canvas.getContext('2d');
 
-    if (!ctx) throw new Error('Failed to get canvas context');
+  //   if (!ctx) throw new Error('Failed to get canvas context');
 
-    canvas.width = 1920;
-    canvas.height = 1080;
+  //   canvas.width = 1920;
+  //   canvas.height = 1080;
 
-    ctx.drawImage(img, 0, 0, 1920, 1080);
+  //   ctx.drawImage(img, 0, 0, 1920, 1080);
 
-    // Convert the canvas to compressed base64 image
-    return canvas.toDataURL('image/png', 0.8);
-  };
+  //   // Convert the canvas to compressed base64 image
+  //   return canvas.toDataURL('image/png', 0.8);
+  // };
 
-  const uploadToS3 = async (imageData: string): Promise<string> => {
-    const compressedImage = await compressImage(imageData);
-    const base64Data = Buffer.from(
-      compressedImage.replace(/^data:image\/\w+;base64,/, ''),
-      'base64',
-    );
-    const fileType = compressedImage.split(';')[0].split(':')[1];
+  // const uploadToS3 = async (imageData: string): Promise<string> => {
+  //   const compressedImage = await compressImage(imageData);
+  //   const base64Data = Buffer.from(
+  //     compressedImage.replace(/^data:image\/\w+;base64,/, ''),
+  //     'base64',
+  //   );
+  //   const fileType = compressedImage.split(';')[0].split(':')[1];
 
-    const params = {
-      Bucket: REACT_APP_AWS_BUCKET_NAME!,
-      Key: `ocr-keywords-new/${Date.now()}.png`,
-      Body: base64Data,
-      ContentType: fileType,
-    };
+  //   const params = {
+  //     Bucket: REACT_APP_AWS_BUCKET_NAME!,
+  //     Key: `ocr-keywords-new/${Date.now()}.png`,
+  //     Body: base64Data,
+  //     ContentType: fileType,
+  //   };
 
-    const uploadResult = await s3.upload(params).promise();
-    return uploadResult.Location;
-  };
+  //   const uploadResult = await s3.upload(params).promise();
+  //   return uploadResult.Location;
+  // };
+
+
 const processImageForOCR = async (imageSrc:any, index:any) => {
   try {
-    const imageUrl = await uploadToS3(imageSrc);
+    const imageUrl = await uploadToS3_CapturedImage(imageSrc);
     const recognitionResponse = await OCRKeywords({ imageUrl });
 
     if (recognitionResponse.success===true) {
