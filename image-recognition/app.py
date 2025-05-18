@@ -18,6 +18,7 @@ cache_file = os.path.join(cache_dir, "ocr_cache.json")
 def ensure_cache_dir_exists():
     if not os.path.exists(cache_dir):
         os.makedirs(cache_dir)
+        
 
 def ensure_ocr_cache_file_exists():
     # Create empty cache file if it doesn't exist
