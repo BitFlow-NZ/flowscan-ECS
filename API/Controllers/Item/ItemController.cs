@@ -45,7 +45,7 @@ namespace API.Controllers.Item
         /// <param name="name"></param>
         /// <returns></returns>
         [HttpGet("search")]
-        [ProducesResponseType(typeof(SuccessResponse<List<ItemResponseDto>>), 200)]
+        [ProducesResponseType(typeof(SuccessResponse<List<ItemOCRResponseDto>>), 200)]
         public async Task<ActionResult<SuccessResponse<List<ItemOCRResponseDto>>>> SearchItems([FromQuery] string name)
         {
             var itemList = await _itemService.SearchItemByName(name);

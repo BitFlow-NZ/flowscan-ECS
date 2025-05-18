@@ -1,5 +1,3 @@
-
-
 namespace API.Models.DTOs.Responses.ImgRecognition
 {
     public class ItemOCRResponseDto
@@ -12,5 +10,7 @@ namespace API.Models.DTOs.Responses.ImgRecognition
         public DateTime LastEditTime { get; set; }
         public int? defaultUnitId { get; set; }
         public List<UnitResponseDto> Units { get; set; }
+
+        public int? Confidence { get; set; } = 100;
     }
 }

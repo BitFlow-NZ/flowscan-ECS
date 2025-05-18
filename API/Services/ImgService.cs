@@ -1,4 +1,3 @@
-
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using API.Data;
@@ -48,7 +47,6 @@ namespace API.Services
                 items = await HandleArray(dataElement);
             }
 
-
             return items;
         }
 
@@ -63,7 +61,6 @@ namespace API.Services
                     throw new NoMatchException(message);
                 }
             }
-
         }
 
         private async Task<List<ItemOCRResponseDto>> HandleArray(JsonElement dataElement)
@@ -74,6 +71,7 @@ namespace API.Services
             foreach (var item in dataElement.EnumerateArray())
             {
                 int itemId = item.GetProperty("item_id").GetInt32();
+                int confidence = item.GetProperty("confidence").GetInt32();
                 int? unitId = null;
 
                 if (item.TryGetProperty("unit_id", out JsonElement unitIdElement) && unitIdElement.ValueKind == JsonValueKind.Number)
@@ -93,7 +91,9 @@ namespace API.Services
                     Name = itemResponseDto.Name,
                     Description = itemResponseDto.Description,
                     Img = itemResponseDto.Img,
-                    Units = unitResponseDtos
+                    Units = unitResponseDtos,
+                    Confidence = confidence,
+
                 };
                 itemOCRResponseDtos.Add(itemOCRResponseDto);
             }

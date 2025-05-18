@@ -95,7 +95,8 @@ namespace API.Services
                     Description = item.Description,
                     Img = item.Img,
                     Units = unitResponseDtos,
-                    LastEditTime = item.LastEditTime
+                    LastEditTime = item.LastEditTime,
+                    Confidence = null
                 };
 
                 itemOCRResponseDtos.Add(itemOCRResponseDto);
