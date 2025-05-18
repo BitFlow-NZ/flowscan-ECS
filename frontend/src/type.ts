@@ -18,6 +18,7 @@ export interface Item {
   units: Unit[];
   quantity: number;
   selectedUnit: Unit | null;
+  confidence?: number | null; // Confidence level for OCR
 }
 
 export interface GlobalValue {

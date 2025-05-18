@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Button, Modal, message,Image } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import Webcam from 'react-webcam';
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 import { UploadFile } from 'antd/es/upload/interface';
 //import ImgCrop from 'antd-img-crop';
 import Cropper from 'react-cropper';

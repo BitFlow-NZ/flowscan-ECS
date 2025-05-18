@@ -290,7 +290,7 @@ export async function getPresignedUrl(
     uploadUrl: string;
     publicUrl: string;
     fileKey: string;
-  }>('/api/Upload/get-presigned-url', {
+  }>('api/Upload/get-presigned-url', {
     method: 'POST',
     data: {
       fileType,
@@ -300,6 +300,9 @@ export async function getPresignedUrl(
   });
 }
 
+
+// https://inflowcan.net/api/upload/get-presigned-url
+///api/Upload/get-presigned-url
 
 
 
