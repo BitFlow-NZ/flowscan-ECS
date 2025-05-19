@@ -4,4 +4,5 @@ Flowscan project deployed on AWS ECS, RDS, established CI/CD using github action
 
 ## Cloud Architecture
 
-![flowscan-ecs-cloud-architecture.drawio-2](https://p.ipic.vip/mo15sq.png)
+
+![flowscan-ecs-cloud-architecture.drawio-2](https://p.ipic.vip/326dnr.png)
